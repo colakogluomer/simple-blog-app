@@ -18,7 +18,7 @@ const PostsList = () => {
   const [layout, setLayout] = useState("gridThree");
 
   const calculateMd = () => {
-    return layout == "gridThree" ? 4 : 3;
+    return layout === "gridThree" ? 4 : 3;
   };
 
   const classes = useStyles();

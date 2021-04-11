@@ -21,6 +21,7 @@ import {
 import PostsList from "./components/PostsList";
 import AddPostForm from "./components/AddPostForm";
 import { fetchPosts } from "./actions/post";
+import PostDetails from "./components/PostDetails";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,7 +69,7 @@ const App = () => {
               color="secondary"
               className={classes.title}
             >
-              <a href="http://localhost:3000/posts">Blogify</a>
+              <a href="http://localhost:3000/posts">Blog</a>
             </Typography>
 
             <Button
@@ -86,6 +87,7 @@ const App = () => {
             <Router>
               <Switch>
                 <Route exact path="/posts" component={PostsList} />
+                <Route exact path="/posts/:id" component={PostDetails} />
               </Switch>
               <Redirect from="/" to="/posts" />
             </Router>

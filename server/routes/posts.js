@@ -19,4 +19,9 @@ router.post("/", async (req, res) => {
   console.log("post created");
 });
 
+router.get("/:id", async (req, res) => {
+  const post = await PostService.find(req.params.id);
+  res.send(post);
+});
+
 export default router;
