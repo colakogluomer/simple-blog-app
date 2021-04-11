@@ -13,4 +13,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const post = await PostService.add(req.body);
+  res.send(post);
+  console.log("post created");
+});
+
 export default router;

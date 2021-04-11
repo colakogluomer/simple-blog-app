@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import FileBase64 from "react-file-base64";
 import {
   Button,
   TextField,
@@ -15,6 +17,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createPost } from "../actions/post";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,9 +38,20 @@ const postSchema = yup.object().shape({
 });
 
 const AddPostForm = ({ open, handleClose }) => {
+  const dispatch = useDispatch();
+  const [file, setFile] = useState(null);
   const { register, handleSubmit, errors, control, reset } = useForm({
     resolver: yupResolver(postSchema),
   });
+  const clearForm = () => {
+    reset();
+    setFile(null);
+    handleClose();
+  };
+  const onSubmit = (data) => {
+    dispatch(createPost({ ...data, image: file }));
+    clearForm();
+  };
 
   const classes = useStyles();
 
@@ -47,7 +61,7 @@ const AddPostForm = ({ open, handleClose }) => {
       <DialogContent>
         <DialogContentText>Yeni bir yazı?</DialogContentText>
         <div className={classes.root}>
-          <form noValidate autoComplete="off">
+          <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
             <TextField
               id="title"
               label="Başlık"
@@ -102,12 +116,23 @@ const AddPostForm = ({ open, handleClose }) => {
               error={errors.content ? true : false}
               fullWidth
             />
+            <FileBase64
+              multiple={false}
+              onDone={({ base64 }) => setFile(base64)}
+            />
           </form>
         </div>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit">Vazgeç</Button>
-        <Button type="submit" variant="outlined" color="primary">
+        <Button color="inherit" onClick={clearForm}>
+          Vazgeç
+        </Button>
+        <Button
+          type="submit"
+          variant="outlined"
+          color="primary"
+          onClick={() => handleSubmit(onSubmit)()}
+        >
           Yayınla
         </Button>
       </DialogActions>
