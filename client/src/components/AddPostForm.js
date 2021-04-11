@@ -50,6 +50,7 @@ const AddPostForm = ({ open, handleClose }) => {
   };
   const onSubmit = (data) => {
     dispatch(createPost({ ...data, image: file }));
+
     clearForm();
   };
 

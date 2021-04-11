@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch } from "react-redux";
 import {
   CssBaseline,
   Container,
@@ -19,6 +20,7 @@ import {
 } from "react-router-dom";
 import PostsList from "./components/PostsList";
 import AddPostForm from "./components/AddPostForm";
+import { fetchPosts } from "./actions/post";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +38,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   const handleOpen = () => {
     setOpen(true);
