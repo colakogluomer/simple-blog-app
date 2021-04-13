@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
+import { fetchPosts } from "./actions/post";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import {
   CssBaseline,
   Container,
@@ -11,16 +18,10 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/MenuBook";
 import PenIcon from "@material-ui/icons/Create";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
 import PostsList from "./components/PostsList";
 import AddPostForm from "./components/AddPostForm";
-import { fetchPosts } from "./actions/post";
 import PostDetails from "./components/PostDetails";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const dispatch = useDispatch();
+
   const [open, setOpen] = useState(false);
   useEffect(() => {
     dispatch(fetchPosts());
@@ -48,6 +50,7 @@ const App = () => {
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -61,9 +64,13 @@ const App = () => {
           <Toolbar>
             <IconButton
               edge="start"
-              className={classes.container}
+              className={classes.menuButton}
               color="inherit"
-            />
+              aria-label="menu"
+            >
+              <MenuIcon />
+            </IconButton>
+
             <Typography
               variant="h6"
               color="secondary"
@@ -93,9 +100,9 @@ const App = () => {
             </Router>
           </Grid>
         </Grid>
-      </Container>
 
-      <AddPostForm open={open} handleClose={handleClose} />
+        <AddPostForm open={open} handleClose={handleClose} />
+      </Container>
     </>
   );
 };

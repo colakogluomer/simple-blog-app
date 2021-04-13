@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core";
-import { useDispatch } from "react-redux";
 import FileBase64 from "react-file-base64";
+import { useDispatch } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
   TextField,
@@ -15,8 +15,8 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { createPost } from "../actions/post";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,35 +32,39 @@ const tags = ["fun", "programming", "health", "science"];
 
 const postSchema = yup.object().shape({
   title: yup.string().required(),
-  subtitle: yup.string().required(),
+  subTitle: yup.string().required(),
   content: yup.string().min(20).required(),
   tag: yup.mixed().oneOf(tags),
 });
 
 const AddPostForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
+
   const [file, setFile] = useState(null);
-  const { register, handleSubmit, errors, control, reset } = useForm({
+  const { register, handleSubmit, control, errors, reset } = useForm({
     resolver: yupResolver(postSchema),
   });
+
+  const onSubmit = (data) => {
+    dispatch(createPost({ ...data, image: file }));
+    clearForm();
+  };
+
   const clearForm = () => {
     reset();
     setFile(null);
     handleClose();
   };
-  const onSubmit = (data) => {
-    dispatch(createPost({ ...data, image: file }));
-
-    clearForm();
-  };
 
   const classes = useStyles();
-
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Yeni Yazı Oluştur</DialogTitle>
+      <DialogTitle> Yeni Yazı Oluştur</DialogTitle>
       <DialogContent>
-        <DialogContentText>Yeni bir yazı?</DialogContentText>
+        <DialogContentText>
+          To subscribe to this website, please enter your email address here. We
+          will send updates occasionally.
+        </DialogContentText>
         <div className={classes.root}>
           <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
             <TextField
@@ -75,14 +79,14 @@ const AddPostForm = ({ open, handleClose }) => {
               fullWidth
             />
             <TextField
-              id="subtitle"
+              id="subTitle"
               label="Alt Başlık"
-              name="subtitle"
+              name="subTitle"
               variant="outlined"
               className={classes.textField}
               size="small"
               inputRef={register}
-              error={errors.subtitle ? true : false}
+              error={errors.subTitle ? true : false}
               fullWidth
             />
             <Controller
@@ -104,19 +108,21 @@ const AddPostForm = ({ open, handleClose }) => {
               error={errors.tag ? true : false}
               defaultValue={tags[0]}
             />
+
             <TextField
               id="content"
               label="İçerik"
               name="content"
               multiline
-              rows={4}
-              variant="outlined"
-              className={classes.textField}
               size="small"
               inputRef={register}
+              rows={4}
+              className={classes.textField}
+              variant="outlined"
               error={errors.content ? true : false}
               fullWidth
             />
+
             <FileBase64
               multiple={false}
               onDone={({ base64 }) => setFile(base64)}
@@ -125,14 +131,14 @@ const AddPostForm = ({ open, handleClose }) => {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={clearForm}>
+        <Button onClick={clearForm} color="inherit">
           Vazgeç
         </Button>
         <Button
           type="submit"
-          variant="outlined"
-          color="primary"
           onClick={() => handleSubmit(onSubmit)()}
+          color="primary"
+          variant="outlined"
         >
           Yayınla
         </Button>

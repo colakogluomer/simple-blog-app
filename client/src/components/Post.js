@@ -36,20 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Post = ({ _id, title, subtitle, content, tag, image, createdAt }) => {
+const Post = ({ _id, title, subTitle, content, tag, image, createdAt }) => {
+  const classes = useStyles();
+
   const convertRelativeTime = (date) => {
     return moment(date).fromNow();
   };
-  const classes = useStyles();
+
   return (
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
         image={image || noImage}
-        title="Resim"
+        title="Paella dish"
       />
       <div className={classes.overlay}>
-        <Typography variant="h6">Ömer</Typography>
+        <Typography variant="h6">Omer</Typography>
         <Typography variant="body2">
           {convertRelativeTime(createdAt)}
         </Typography>
@@ -57,19 +59,18 @@ const Post = ({ _id, title, subtitle, content, tag, image, createdAt }) => {
       <CardContent>
         <Typography variant="h6" component="p" gutterBottom>
           {title}
-        </Typography>
+        </Typography>{" "}
         <Typography variant="overline" component="p" gutterBottom>
-          {subtitle}
-        </Typography>
-        <Typography variant="body2" component="p" gutterBottom>
-          {content.substring(0, 250) + "..."}
+          {subTitle}
+        </Typography>{" "}
+        <Typography variant="body2" component="p">
+          {content?.substring(0, 250) + "..."}
         </Typography>
         <Chip label={`# ${tag}`} variant="outlined" className={classes.chip} />
       </CardContent>
-
       <CardActions>
         <Button size="small" color="primary">
-          <Link to={`posts/${_id}`}>Daha fazla...</Link>
+          <Link to={`/posts/${_id}`}>Daha Fazla</Link>
         </Button>
       </CardActions>
     </Card>

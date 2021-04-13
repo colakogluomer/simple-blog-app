@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
   const post = await PostService.add(req.body);
   res.send(post);
   console.log("post created");
@@ -22,6 +23,19 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const post = await PostService.find(req.params.id);
   res.send(post);
+});
+
+router.delete("/:id", async (req, res) => {
+  const deletedPost = await PostService.del(req.params.id);
+
+  res.json(deletedPost);
+});
+router.patch("/:id", async (req, res) => {
+  const _id = req.params.id;
+  const post = req.body;
+  const options = { new: true };
+  const updatedPost = await PostService.updateById(_id, post, options);
+  res.json(updatedPost);
 });
 
 export default router;

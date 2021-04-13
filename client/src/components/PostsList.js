@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
 import { Grid, Button } from "@material-ui/core";
 import Post from "./Post";
@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PostsList = () => {
   const posts = useSelector((state) => state.posts.posts);
+
   const [layout, setLayout] = useState("gridThree");
 
   const calculateMd = () => {
@@ -22,8 +23,10 @@ const PostsList = () => {
   };
 
   const classes = useStyles();
+
   return (
     <>
+      {/* Layout Shifter */}
       <div className={classes.layoutShifter}>
         <Button
           variant="text"
@@ -32,8 +35,8 @@ const PostsList = () => {
         >
           <img
             src={gridThree}
+            style={{ background: layout === "gridThree" ? "#ccc" : "" }}
             alt="Three Columns Grid Icon"
-            style={{ background: layout === "gridThree" ? "^#ccc" : "" }}
           />
         </Button>
         <Button
@@ -43,8 +46,8 @@ const PostsList = () => {
         >
           <img
             src={gridFour}
+            style={{ background: layout === "gridFour" ? "#ccc" : "" }}
             alt="Four Columns Grid Icon"
-            style={{ background: layout === "gridFour" ? "^#ccc" : "" }}
           />
         </Button>
       </div>

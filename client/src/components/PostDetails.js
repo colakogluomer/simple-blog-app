@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Paper, Divider, Button, Chip } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditPostForm from "./EditPostForm";
+import { fetchSinglePost, deletePost } from "../actions/post";
 import noImage from "../images/noimage.svg";
-import { fetchSinglePost } from "../actions/post";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,62 +32,91 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PostDetails = ({ match, history, location }) => {
+const PostDetails = ({ history, location, match }) => {
   const { id } = match.params;
   const dispatch = useDispatch();
 
   const currentPost = useSelector((state) => state.posts.currentPost);
 
+  const [editMode, setEditMode] = useState(false);
+
   useEffect(() => {
     dispatch(fetchSinglePost(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const convertRelativeTime = (date) => {
     return moment(date).fromNow();
   };
 
+  const removePost = () => {
+    dispatch(deletePost(currentPost._id));
+    history.push("/posts");
+  };
+
+  const openEditMode = () => {
+    setEditMode(true);
+  };
+
+  const closeEditMode = () => {
+    setEditMode(false);
+  };
+
   const classes = useStyles();
   return (
     <Paper className={classes.paper} elevation={0}>
-      <div>
-        <div className={classes.header}>
-          <Typography variant="h5" gutterBottom>
-            {currentPost?.title}
+      {editMode ? (
+        <EditPostForm post={currentPost} closeEditMode={closeEditMode} />
+      ) : (
+        <div>
+          <div className={classes.header}>
+            <Typography variant="h5" gutterBottom>
+              {currentPost?.title}
+            </Typography>
+            <div>
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={openEditMode}
+              >
+                Düzenle
+              </Button>{" "}
+              <Button
+                color="secondary"
+                variant="outlined"
+                onClick={removePost}
+                startIcon={<DeleteIcon />}
+              >
+                Sil
+              </Button>
+            </div>
+          </div>
+
+          <Divider />
+          <Typography variant="overline" gutterBottom>
+            {currentPost?.subTitle}
           </Typography>
-          <div>
-            <Button color="primary" variant="outlined" startIcon={<EditIcon />}>
-              Düzenle
-            </Button>{" "}
-            <Button
-              color="secondary"
-              variant="outlined"
-              startIcon={<DeleteIcon />}
-            >
-              Sil
-            </Button>
+          <Typography variant="caption" component="p" gutterBottom>
+            {convertRelativeTime(currentPost?.createdAt)} by Omer
+          </Typography>
+          <Chip
+            label={`# ${currentPost?.tag}`}
+            variant="outlined"
+            className={classes.chip}
+          />
+
+          <div className={classes.content}>
+            <img
+              src={currentPost?.image || noImage}
+              alt="Post"
+              className={classes.image}
+            />
+            <Typography variant="body1" gutterBottom>
+              {currentPost?.content}
+            </Typography>
           </div>
         </div>
-      </div>
-      <Divider />
-      <Typography variant="overline" gutterBottom>
-        {currentPost?.subtitle}
-      </Typography>
-      <Typography variant="caption" component="p">
-        {convertRelativeTime(currentPost?.createdAt)} by Omer
-      </Typography>
-      <Chip
-        label={`# ${currentPost?.tag}`}
-        variant="outlined"
-        className={classes.chip}
-      />
-      <div className={classes.content}>
-        <img
-          src={currentPost?.image || noImage}
-          alt="Post"
-          className={classes.image}
-        />
-        <Typography variant="body1">{currentPost?.content}</Typography>
-      </div>
+      )}
     </Paper>
   );
 };
