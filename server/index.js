@@ -1,11 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import("./mongo-connection.js");
-import { PORT } from "./mongo-connection.js";
 import postRoutes from "./routes/posts.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 const app = express();
+dotenv.config();
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
@@ -16,6 +17,13 @@ app.get("/", (req, res) => {
 });
 app.use("/posts", postRoutes);
 
-app.listen(PORT, () => {
-  console.log("Server Listening");
-});
+const PORT = process.env.PORT || 5000;
+
+mongoose
+  .connect(process.env.CONNECTION_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("connected to database"))
+  .then(() => app.listen(PORT, () => console.log("server listening")))
+  .catch((error) => console.log(error.message));
