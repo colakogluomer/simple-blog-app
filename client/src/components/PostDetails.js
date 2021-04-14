@@ -48,8 +48,8 @@ const PostDetails = ({ history, location, match }) => {
     return moment(date).fromNow();
   };
 
-  const removePost = () => {
-    dispatch(deletePost(currentPost._id));
+  const removePost = async () => {
+    await dispatch(deletePost(currentPost._id));
     history.push("/posts");
   };
 
@@ -94,10 +94,10 @@ const PostDetails = ({ history, location, match }) => {
 
           <Divider />
           <Typography variant="overline" gutterBottom>
-            {currentPost?.subTitle}
+            {currentPost?.subtitle}
           </Typography>
           <Typography variant="caption" component="p" gutterBottom>
-            {convertRelativeTime(currentPost?.createdAt)} by Omer
+            {convertRelativeTime(currentPost?.createdAt)} by Didem
           </Typography>
           <Chip
             label={`# ${currentPost?.tag}`}

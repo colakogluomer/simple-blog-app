@@ -7,7 +7,7 @@ export default class Service {
   }
 
   async del(itemId) {
-    return this.model.findByIdAndDelete({ _id: itemId });
+    return this.model.findByIdAndRemove(itemId);
   }
 
   async find(itemId) {

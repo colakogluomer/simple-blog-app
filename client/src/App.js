@@ -95,8 +95,9 @@ const App = () => {
               <Switch>
                 <Route exact path="/posts" component={PostsList} />
                 <Route exact path="/posts/:id" component={PostDetails} />
+
+                <Redirect from="/" to="/posts" />
               </Switch>
-              <Redirect from="/" to="/posts" />
             </Router>
           </Grid>
         </Grid>
